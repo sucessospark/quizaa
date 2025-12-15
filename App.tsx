@@ -4,14 +4,13 @@ import { Footer } from './components/Footer';
 import { LandingPage } from './pages/LandingPage';
 import { Quiz } from './pages/Quiz';
 import { Result } from './pages/Result';
-import { LeadForm } from './pages/LeadForm';
-import { ViewState, ResultType, UserResponses, LeadData, CrmPayload } from './types';
+import { ViewState, ResultType, UserResponses, CrmPayload } from './types';
 import { saveResultToSupabase } from './services/supabase';
+import { sendToWebhook } from './services/webhook';
 
 function App() {
   const [view, setView] = useState<ViewState>(ViewState.LANDING);
   const [finalResult, setFinalResult] = useState<ResultType>(ResultType.LOW);
-  const [responses, setResponses] = useState<UserResponses>({});
 
   const calculateResult = (currentResponses: UserResponses) => {
     let totalScore = 0;
@@ -24,8 +23,10 @@ function App() {
     return ResultType.LOW;
   };
 
-  // Funcao auxiliar para montar o payload e salvar
-  const saveToDb = async (resType: ResultType, userResp: UserResponses, contact?: LeadData) => {
+  // Função centralizada para salvar em todos os lugares (Supabase + N8N)
+  const processAndSaveData = async (resType: ResultType, userResp: UserResponses) => {
+    
+    // Monta o payload único
     const payload: CrmPayload = {
       lead_source: 'site_auxilio_acidente',
       lead_score: Object.values(userResp).reduce((a, b) => a + b, 0),
@@ -36,33 +37,34 @@ function App() {
         userAgent: navigator.userAgent,
         screen: `${window.screen.width}x${window.screen.height}`
       },
-      contact: contact
+      // Como removemos o formulário, enviamos como Anônimo
+      contact: {
+        name: 'Anônimo (Quiz Completo)',
+        phone: ''
+      }
     };
-    await saveResultToSupabase(payload);
+
+    console.log("Processando salvamento...", payload);
+
+    // Executa Supabase e Webhook (N8N) em paralelo para não travar a UI
+    // Não usamos 'await' aqui para a transição de tela ser instantânea, 
+    // mas logamos o resultado no console.
+    Promise.allSettled([
+      saveResultToSupabase(payload),
+      sendToWebhook(payload)
+    ]).then((results) => {
+      console.log("Sincronização concluída:", results);
+    });
   };
 
-  const handleQuizCompletion = async (userResponses: UserResponses) => {
+  const handleQuizCompletion = (userResponses: UserResponses) => {
     const result = calculateResult(userResponses);
-    setResponses(userResponses);
     setFinalResult(result);
     
-    // LOGICA PRINCIPAL:
-    // Se for HIGH, manda para o Formulario de Lead antes de mostrar o resultado.
-    // Se for MEDIUM/LOW, mostra o resultado direto (e salva como anônimo).
-    
-    if (result === ResultType.HIGH) {
-      setView(ViewState.LEAD_FORM);
-    } else {
-      await saveToDb(result, userResponses); // Salva anônimo
-      setView(ViewState.RESULT);
-      window.scrollTo(0,0);
-    }
-  };
+    // 1. Salva os dados (Supabase + N8N)
+    processAndSaveData(result, userResponses);
 
-  const handleLeadSubmit = async (data: LeadData) => {
-    // Agora salvamos no banco com os dados do lead
-    // Aguarda o salvamento antes de mostrar o resultado
-    await saveToDb(finalResult, responses, data);
+    // 2. Vai direto para o resultado, sem pedir nome/telefone
     setView(ViewState.RESULT);
     window.scrollTo(0,0);
   };
@@ -86,9 +88,7 @@ function App() {
           />
         )}
 
-        {view === ViewState.LEAD_FORM && (
-          <LeadForm onSubmit={handleLeadSubmit} />
-        )}
+        {/* LeadForm foi removido conforme solicitado */}
 
         {view === ViewState.RESULT && (
           <Result 

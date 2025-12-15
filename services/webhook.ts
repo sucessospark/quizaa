@@ -1,28 +1,14 @@
 import { LINKS } from '../constants';
-import { UserResponses, ResultType, CrmPayload } from '../types';
+import { CrmPayload } from '../types';
 
-export const sendToWebhook = async (data: {
-  responses: UserResponses;
-  result: ResultType;
-  timestamp: string;
-}) => {
-  if (LINKS.webhook_n8n.includes("SEU-N8N")) {
-    console.warn("Webhook URL não configurada em constants.ts");
+export const sendToWebhook = async (payload: CrmPayload) => {
+  // Verifica se a URL do N8N está configurada corretamente
+  if (!LINKS.webhook_n8n || LINKS.webhook_n8n.includes("SEU-N8N")) {
+    console.warn("Webhook N8N não configurado ou inválido em constants.ts. Dados não enviados para n8n.");
     return;
   }
 
-  // Preparar Payload para o CRM (Estrutura de Banco de Dados)
-  const crmPayload: CrmPayload = {
-    lead_source: 'site_auxilio_acidente',
-    lead_score: Object.values(data.responses).reduce((a, b) => a + b, 0), // Soma total
-    classification: data.result,
-    answers_json: JSON.stringify(data.responses),
-    timestamp: data.timestamp,
-    device_info: {
-      userAgent: navigator.userAgent,
-      screen: `${window.screen.width}x${window.screen.height}`
-    }
-  };
+  console.log("Enviando evento para n8n...", payload);
 
   try {
     const response = await fetch(LINKS.webhook_n8n, {
@@ -30,13 +16,18 @@ export const sendToWebhook = async (data: {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(crmPayload),
+      body: JSON.stringify({
+        event: "quiz_completed",
+        data: payload
+      }),
     });
 
     if (!response.ok) {
-      console.error('Erro ao enviar dados para n8n:', response.statusText);
+      console.error(`Erro N8N: ${response.status} - ${response.statusText}`);
+    } else {
+      console.log("Evento enviado para N8N com sucesso!");
     }
   } catch (error) {
-    console.error('Erro de conexão com n8n:', error);
+    console.error('Erro de conexão com N8N:', error);
   }
 };
