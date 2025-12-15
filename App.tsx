@@ -4,43 +4,64 @@ import { Footer } from './components/Footer';
 import { LandingPage } from './pages/LandingPage';
 import { Quiz } from './pages/Quiz';
 import { Result } from './pages/Result';
-import { ViewState, ResultType, UserResponses } from './types';
-import { sendToWebhook } from './services/webhook';
+import { LeadForm } from './pages/LeadForm';
+import { ViewState, ResultType, UserResponses, LeadData, CrmPayload } from './types';
+import { saveResultToSupabase } from './services/supabase';
 
 function App() {
   const [view, setView] = useState<ViewState>(ViewState.LANDING);
   const [finalResult, setFinalResult] = useState<ResultType>(ResultType.LOW);
+  const [responses, setResponses] = useState<UserResponses>({});
 
-  const calculateResult = (responses: UserResponses) => {
+  const calculateResult = (currentResponses: UserResponses) => {
     let totalScore = 0;
+    Object.values(currentResponses).forEach(score => totalScore += score);
+    const hasDisqualifier = Object.values(currentResponses).some(score => score <= -5);
     
-    // Sum scores
-    Object.values(responses).forEach(score => {
-      totalScore += score;
-    });
-
-    // Check for "killer" answers
-    const hasDisqualifier = Object.values(responses).some(score => score <= -5);
-
     if (hasDisqualifier) return ResultType.LOW;
-    
-    // Logic Thresholds
     if (totalScore >= 7) return ResultType.HIGH;
     if (totalScore >= 3) return ResultType.MEDIUM;
     return ResultType.LOW;
   };
 
-  const handleQuizCompletion = (responses: UserResponses) => {
-    const result = calculateResult(responses);
+  // Funcao auxiliar para montar o payload e salvar
+  const saveToDb = (resType: ResultType, userResp: UserResponses, contact?: LeadData) => {
+    const payload: CrmPayload = {
+      lead_source: 'site_auxilio_acidente',
+      lead_score: Object.values(userResp).reduce((a, b) => a + b, 0),
+      classification: resType,
+      answers_json: JSON.stringify(userResp),
+      timestamp: new Date().toISOString(),
+      device_info: {
+        userAgent: navigator.userAgent,
+        screen: `${window.screen.width}x${window.screen.height}`
+      },
+      contact: contact
+    };
+    saveResultToSupabase(payload);
+  };
+
+  const handleQuizCompletion = (userResponses: UserResponses) => {
+    const result = calculateResult(userResponses);
+    setResponses(userResponses);
     setFinalResult(result);
     
-    // Send data to n8n (Fire and forget, don't block UI)
-    sendToWebhook({
-      responses,
-      result,
-      timestamp: new Date().toISOString()
-    });
+    // LOGICA PRINCIPAL:
+    // Se for HIGH, manda para o Formulario de Lead antes de mostrar o resultado.
+    // Se for MEDIUM/LOW, mostra o resultado direto (e salva como anônimo).
+    
+    if (result === ResultType.HIGH) {
+      setView(ViewState.LEAD_FORM);
+    } else {
+      saveToDb(result, userResponses); // Salva anônimo
+      setView(ViewState.RESULT);
+      window.scrollTo(0,0);
+    }
+  };
 
+  const handleLeadSubmit = (data: LeadData) => {
+    // Agora salvamos no banco com os dados do lead
+    saveToDb(finalResult, responses, data);
     setView(ViewState.RESULT);
     window.scrollTo(0,0);
   };
@@ -62,6 +83,10 @@ function App() {
             onComplete={handleQuizCompletion} 
             onBack={() => setView(ViewState.LANDING)}
           />
+        )}
+
+        {view === ViewState.LEAD_FORM && (
+          <LeadForm onSubmit={handleLeadSubmit} />
         )}
 
         {view === ViewState.RESULT && (

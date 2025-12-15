@@ -10,40 +10,43 @@ export const Header: React.FC = () => {
         {/* Decorative thin gold line */}
       </div>
 
-      <div className="container mx-auto px-4 flex justify-between items-center mt-2">
-        <div className="flex items-center gap-4">
-            {/* Logo area - Image based */}
-            <div className="h-12 w-auto flex items-center">
+      <div className="container mx-auto px-4 mt-2 relative flex justify-center items-center min-h-[50px]">
+        
+        {/* Logo area - Centered */}
+        <div className="flex flex-col items-center">
+             <div className="flex items-center gap-3">
                  {/* 
-                    INSTRUCTION: Save your logo as 'logo.png' in the 'public' folder.
-                    The logic below handles the fallback if the image is missing.
+                    Logo Image
                  */}
-                 <img 
-                    src="/logo.png" 
-                    alt="Plácido Cintra Advocacia" 
-                    className="h-full w-auto object-contain"
-                    onError={(e) => {
-                        // Fallback text if logo.png is not found
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.parentElement!.innerHTML = '<span class="font-serif font-bold text-xl text-brand-black border-2 border-brand-black p-1">PC</span>';
-                    }}
-                 />
-            </div>
-            
-            {/* Mobile Text (Show if logo is small or for SEO) */}
-            <div className="hidden sm:block">
-                <h1 className="text-xl md:text-2xl font-serif text-brand-black font-bold leading-none tracking-tight">
-                  Plácido Cintra
-                </h1>
-                <p className="text-[10px] md:text-xs text-brand-steel uppercase tracking-[0.2em] font-bold mt-1">
-                  Advocacia Previdenciária
-                </p>
-            </div>
+                 <div className="h-12 md:h-14 w-auto flex items-center justify-center">
+                     <img 
+                        src="/Logo-Site.jpg" 
+                        alt="Plácido Cintra Advocacia" 
+                        className="h-full w-auto object-contain"
+                        onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                            e.currentTarget.parentElement!.innerHTML = '<span class="font-serif font-bold text-2xl text-brand-black border-2 border-brand-black p-1 px-2">PC</span>';
+                        }}
+                     />
+                 </div>
+                
+                 {/* Text - Visible on Tablet/Desktop for nicer centering balance, or stacked on mobile if desired. 
+                     Here keeping it simple: Icon centered on mobile, Text added on larger screens */}
+                 <div className="hidden sm:block text-left">
+                    <h1 className="text-xl md:text-2xl font-serif text-brand-black font-bold leading-none tracking-tight">
+                      Plácido Cintra
+                    </h1>
+                    <p className="text-[10px] md:text-xs text-brand-steel uppercase tracking-[0.2em] font-bold mt-1">
+                      Advocacia Previdenciária
+                    </p>
+                </div>
+             </div>
         </div>
         
-        <div className="hidden md:flex flex-col items-end text-xs text-brand-charcoal font-sans">
+        {/* Contact Info - Absolute Right (Desktop Only) */}
+        <div className="hidden lg:flex flex-col items-end text-xs text-brand-charcoal font-sans absolute right-0 top-1/2 -translate-y-1/2">
            <div className="flex items-center gap-4 mb-1">
-             <span className="font-bold text-brand-steel">{COMPANY.oab_mg}</span>
+             <span className="font-bold text-brand-steel px-2 py-1 bg-brand-steel/10 rounded-sm">{COMPANY.oab_mg}</span>
            </div>
            <div className="flex items-center text-gray-500">
              <MapPin size={12} className="mr-1" />

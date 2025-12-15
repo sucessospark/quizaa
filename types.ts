@@ -1,6 +1,7 @@
 export enum ViewState {
   LANDING = 'LANDING',
   QUIZ = 'QUIZ',
+  LEAD_FORM = 'LEAD_FORM', // Novo estado
   RESULT = 'RESULT'
 }
 
@@ -25,21 +26,24 @@ export interface UserResponses {
   [questionId: number]: number; // Maps Question ID to Score
 }
 
+export interface LeadData {
+  name: string;
+  phone: string;
+}
+
 // =====================================
 // CRM / DATABASE SCHEMA DEFINITION
 // =====================================
-// Esta é a estrutura que o N8N receberá para salvar no Banco de Dados
 export interface CrmPayload {
-  lead_source: string; // 'site_quiz'
+  lead_source: string; 
   lead_score: number;
-  classification: ResultType; // 'HIGH', 'MEDIUM', 'LOW'
-  answers_json: string; // As respostas do usuário
+  classification: ResultType; 
+  answers_json: string; 
   timestamp: string;
   device_info: {
     userAgent: string;
     screen: string;
   };
-  // Campos opcionais para futuro (se capturar lead form)
   contact?: {
     name?: string;
     phone?: string;
