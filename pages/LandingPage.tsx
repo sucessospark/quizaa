@@ -72,7 +72,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
                 {/* Image Container */}
                 <div className="absolute inset-0 bg-brand-charcoal overflow-hidden shadow-2xl z-10 grayscale hover:grayscale-0 transition-all duration-700 ease-in-out group">
                     <img 
-                        src="/dr-placido.png" 
+                        src="/placido.jpg.jpg" 
                         onError={(e) => {
                             (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=800';
                         }}
@@ -83,7 +83,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
                     {/* Name Tag */}
                     <div className="absolute bottom-0 left-0 w-full p-8 text-center md:text-left bg-gradient-to-t from-black via-black/50 to-transparent">
                         <p className="font-serif text-2xl text-brand-white">{COMPANY.attorney}</p>
-                        <p className="text-xs text-brand-gold uppercase tracking-[0.2em] mt-1">Sócio Fundador • {COMPANY.oab_mg}</p>
+                        <p className="text-xs text-brand-gold uppercase tracking-[0.2em] mt-1">Advogado Responsável Fundador • {COMPANY.oab_mg}</p>
                     </div>
                 </div>
              </div>
