@@ -8,8 +8,10 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 export const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 export const saveResultToSupabase = async (payload: CrmPayload) => {
+  console.log("Iniciando envio para Supabase...", payload);
+  
   try {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('leads')
       .insert([
         {
@@ -21,12 +23,19 @@ export const saveResultToSupabase = async (payload: CrmPayload) => {
           answers_json: typeof payload.answers_json === 'string' ? JSON.parse(payload.answers_json) : payload.answers_json,
           user_agent: payload.device_info.userAgent
         }
-      ]);
+      ])
+      .select();
 
     if (error) {
-      console.error('Erro Supabase:', error.message);
+      console.error('Erro ao salvar no Supabase:', error);
+      return { success: false, error };
     }
+    
+    console.log('Dados salvos com sucesso no Supabase:', data);
+    return { success: true, data };
+
   } catch (err) {
-    console.error('Erro de conexão Supabase:', err);
+    console.error('Erro inesperado na conexão Supabase:', err);
+    return { success: false, error: err };
   }
 };

@@ -25,7 +25,7 @@ function App() {
   };
 
   // Funcao auxiliar para montar o payload e salvar
-  const saveToDb = (resType: ResultType, userResp: UserResponses, contact?: LeadData) => {
+  const saveToDb = async (resType: ResultType, userResp: UserResponses, contact?: LeadData) => {
     const payload: CrmPayload = {
       lead_source: 'site_auxilio_acidente',
       lead_score: Object.values(userResp).reduce((a, b) => a + b, 0),
@@ -38,10 +38,10 @@ function App() {
       },
       contact: contact
     };
-    saveResultToSupabase(payload);
+    await saveResultToSupabase(payload);
   };
 
-  const handleQuizCompletion = (userResponses: UserResponses) => {
+  const handleQuizCompletion = async (userResponses: UserResponses) => {
     const result = calculateResult(userResponses);
     setResponses(userResponses);
     setFinalResult(result);
@@ -53,15 +53,16 @@ function App() {
     if (result === ResultType.HIGH) {
       setView(ViewState.LEAD_FORM);
     } else {
-      saveToDb(result, userResponses); // Salva anônimo
+      await saveToDb(result, userResponses); // Salva anônimo
       setView(ViewState.RESULT);
       window.scrollTo(0,0);
     }
   };
 
-  const handleLeadSubmit = (data: LeadData) => {
+  const handleLeadSubmit = async (data: LeadData) => {
     // Agora salvamos no banco com os dados do lead
-    saveToDb(finalResult, responses, data);
+    // Aguarda o salvamento antes de mostrar o resultado
+    await saveToDb(finalResult, responses, data);
     setView(ViewState.RESULT);
     window.scrollTo(0,0);
   };
