@@ -11,15 +11,25 @@ export const saveResultToSupabase = async (payload: CrmPayload) => {
   console.log("Tentando salvar no Supabase...", payload);
   
   try {
-    // Prepara o JSON das respostas. O Supabase espera um Objeto JSON, não uma string, 
-    // se o campo for do tipo JSONB.
-    let answersData = payload.answers_json;
+    // Prepara o JSON das respostas.
+    let answersData: any = payload.answers_json;
     try {
         if (typeof answersData === 'string') {
             answersData = JSON.parse(answersData);
         }
     } catch (e) {
         console.warn("Falha ao fazer parse do JSON das respostas, enviando como string", e);
+        answersData = { raw: payload.answers_json };
+    }
+
+    // CORREÇÃO: Como a coluna 'classification' não existe no banco, 
+    // salvamos essa informação dentro do JSON de respostas para não perder o dado.
+    if (typeof answersData === 'object' && answersData !== null) {
+        answersData = {
+            ...answersData,
+            _classification: payload.classification,
+            _timestamp: payload.timestamp
+        };
     }
 
     const { data, error } = await supabase
@@ -29,7 +39,7 @@ export const saveResultToSupabase = async (payload: CrmPayload) => {
           name: payload.contact?.name || 'Anônimo (Quiz)',
           phone: payload.contact?.phone || null,
           lead_score: payload.lead_score,
-          classification: payload.classification,
+          // classification: payload.classification, // <--- REMOVIDO PARA EVITAR ERRO DE SCHEMA
           answers_json: answersData,
           user_agent: payload.device_info.userAgent
         }
