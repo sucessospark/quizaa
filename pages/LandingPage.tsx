@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, Scale, CheckCircle, ExternalLink, Search, ShieldAlert, FileText, Video, Eye, FileSignature, Percent } from 'lucide-react';
+import { ArrowRight, Scale, CheckCircle, ExternalLink, Search, ShieldAlert, FileText, Video, Eye, FileSignature, Percent, Building2, Gavel, Award } from 'lucide-react';
 import { Button } from '../components/Button';
 import { COMPANY, LINKS, SECURITY_TIPS } from '../constants';
 
@@ -19,39 +19,44 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
   };
 
   return (
-    <div className="fade-in bg-transparent"> {/* BG transparent because grain is on body */}
+    <div className="fade-in bg-transparent w-full overflow-x-hidden"> {/* Prevent horizontal scroll */}
       
-      {/* HERO SECTION */}
-      <section className="bg-brand-black text-brand-white relative overflow-hidden min-h-[90vh] flex items-center border-b-4 border-brand-gold">
+      {/* =========================================
+          HERO SECTION
+      ========================================= */}
+      <section className="bg-brand-black text-brand-white relative min-h-[85vh] flex items-center border-b-4 border-brand-gold">
         {/* Background Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-brand-charcoal to-brand-steel/20 opacity-90 z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-black via-brand-charcoal to-brand-steel/10 opacity-90 z-0"></div>
         
-        <div className="container mx-auto px-4 py-12 relative z-10 flex flex-col md:flex-row items-center">
+        {/* Mobile Background Image Hint */}
+        <div className="absolute inset-0 bg-[url('/placido.jpg')] bg-cover bg-center opacity-10 md:hidden z-0 mix-blend-overlay"></div>
+
+        <div className="container mx-auto px-4 py-12 md:py-20 relative z-10 flex flex-col md:flex-row items-center gap-12">
           
           {/* Text Content */}
-          <div className="md:w-3/5 lg:w-1/2 md:pr-12">
-            <div className="inline-flex items-center gap-2 px-3 py-1 border border-brand-gold/50 text-brand-gold text-[10px] uppercase tracking-[0.2em] mb-6 bg-black/40 backdrop-blur-sm">
+          <div className="w-full md:w-3/5 lg:w-1/2 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 border border-brand-gold/50 text-brand-gold text-[10px] md:text-xs uppercase tracking-[0.2em] mb-6 bg-black/40 backdrop-blur-sm rounded-sm">
               <Scale size={12} />
-              <span>Direito Acidentário Especializado</span>
+              <span>Direito Acidentário & Previdenciário</span>
             </div>
             
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-serif font-bold mb-6 leading-[1.1] text-brand-white">
-              Justiça para quem <br/>
-              <span className="text-brand-gold italic">trabalhou e sofreu.</span>
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold mb-6 leading-tight text-brand-white">
+              Sua sequela tem <br/>
+              <span className="text-brand-gold italic">valor de indenização.</span>
             </h1>
             
-            <p className="text-lg md:text-xl text-gray-300 mb-10 leading-relaxed font-light max-w-xl border-l-2 border-brand-steel pl-6">
-              O Auxílio-Acidente não é favor, é lei. Se você ficou com sequelas (pinos, placas, perda de movimento) após um acidente, descubra se tem direito à indenização.
+            <p className="text-base md:text-xl text-gray-300 mb-10 leading-relaxed font-light max-w-xl mx-auto md:mx-0 border-l-0 md:border-l-2 border-brand-steel md:pl-6">
+              Escritório especializado na concessão de Auxílio-Acidente. Se você sofreu acidente de trabalho, trânsito ou lazer e ficou com limitações, a lei garante seus direitos.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-5">
-              <Button onClick={onStartQuiz} className="text-base px-10 py-5 shadow-brand-gold/20">
-                Iniciar Análise Confidencial
+            <div className="flex flex-col sm:flex-row gap-5 justify-center md:justify-start">
+              <Button onClick={onStartQuiz} className="text-base px-8 py-4 md:px-10 md:py-5 shadow-brand-gold/20 w-full sm:w-auto">
+                Iniciar Análise Gratuita
                 <ArrowRight size={18} />
               </Button>
             </div>
 
-            <div className="mt-8 flex items-center gap-4 text-xs text-gray-500 font-sans uppercase tracking-wider">
+            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 text-xs text-gray-500 font-sans uppercase tracking-wider">
                <div className="flex -space-x-2">
                   {[1,2,3].map(i => (
                     <div key={i} className="w-8 h-8 rounded-full bg-brand-steel border-2 border-brand-black flex items-center justify-center text-white text-[9px] font-bold">
@@ -59,17 +64,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
                     </div>
                   ))}
                </div>
-               <p>Triagem baseada na Lei 8.213/91</p>
+               <p>Atuação em todo o Brasil (Processos 100% Digitais)</p>
             </div>
           </div>
 
-          {/* Image Section - Portrait Style with CV Link */}
-          <div className="md:w-2/5 lg:w-1/2 mt-12 md:mt-0 relative flex flex-col items-center">
-             <div className="relative w-[350px] md:w-[450px] aspect-[3/4] mb-6">
-                {/* Gold Frame Effect */}
+          {/* Image Section - Desktop Only for Layout Balance */}
+          <div className="hidden md:flex md:w-2/5 lg:w-1/2 justify-center relative">
+             <div className="relative w-[300px] lg:w-[400px] aspect-[3/4]">
                 <div className="absolute inset-0 border-2 border-brand-gold translate-x-4 translate-y-4 z-0"></div>
-                
-                {/* Image Container */}
                 <div className="absolute inset-0 bg-brand-charcoal overflow-hidden shadow-2xl z-10 grayscale hover:grayscale-0 transition-all duration-700 ease-in-out group">
                     <img 
                         src="/placido.jpg" 
@@ -79,161 +81,230 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onStartQuiz }) => {
                         alt="Dr. Plácido Cintra" 
                         className="object-cover w-full h-full opacity-90 group-hover:scale-105 transition-transform duration-700"
                     />
-                    
-                    {/* Name Tag */}
-                    <div className="absolute bottom-0 left-0 w-full p-8 text-center md:text-left bg-gradient-to-t from-black via-black/50 to-transparent">
-                        <p className="font-serif text-2xl text-brand-white">{COMPANY.attorney}</p>
-                        <p className="text-xs text-brand-gold uppercase tracking-[0.2em] mt-1">Sócio Fundador • {COMPANY.oab_mg}</p>
-                    </div>
                 </div>
              </div>
-
-             {/* CV Link - NOVO */}
-             <a 
-                href={LINKS.cv} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 text-brand-steel text-sm font-bold uppercase tracking-wider hover:text-brand-gold transition-colors border-b border-transparent hover:border-brand-gold pb-1"
-             >
-                <FileText size={16} />
-                Visualizar Currículo & Habilitações
-             </a>
           </div>
         </div>
       </section>
 
-      {/* TRANSPARÊNCIA RADICAL SECTION */}
-      <section className="py-24 bg-brand-white text-brand-charcoal relative">
+      {/* =========================================
+          WHAT IS IT (EDUCATIONAL)
+      ========================================= */}
+      <section className="py-16 md:py-24 bg-brand-white text-brand-charcoal">
+        <div className="container mx-auto px-4">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6 text-brand-black">O que é o Auxílio-Acidente?</h2>
+                    <div className="w-20 h-1 bg-brand-gold mb-8"></div>
+                    <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                        É um benefício previdenciário de natureza indenizatória. Diferente da aposentadoria por invalidez, 
+                        <strong className="text-brand-goldDark"> você pode continuar trabalhando</strong> e recebendo salário normalmente, enquanto recebe esse valor extra do INSS todos os meses.
+                    </p>
+                    <ul className="space-y-4 mt-6">
+                        {[
+                            "Para quem sofreu qualquer tipo de acidente.",
+                            "Para quem ficou com sequelas permanentes (mínimas ou graves).",
+                            "Pagamento retroativo desde o fim do auxílio-doença.",
+                            "Válido até a aposentadoria."
+                        ].map((item, idx) => (
+                            <li key={idx} className="flex items-start gap-3">
+                                <CheckCircle className="text-brand-steel mt-1 shrink-0" size={20} />
+                                <span className="text-brand-charcoal font-medium">{item}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                
+                {/* Stats / Graphic Representation */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="bg-gray-50 p-6 border-l-4 border-brand-steel rounded-sm shadow-sm">
+                        <Gavel className="text-brand-steel mb-3" size={32} />
+                        <h3 className="font-bold text-lg mb-2">Direito Indenizatório</h3>
+                        <p className="text-sm text-gray-500">Não exige que você pare de trabalhar. É um "bônus" pela redução da capacidade.</p>
+                    </div>
+                    <div className="bg-gray-50 p-6 border-l-4 border-brand-gold rounded-sm shadow-sm">
+                        <Award className="text-brand-gold mb-3" size={32} />
+                        <h3 className="font-bold text-lg mb-2">Vitalício</h3>
+                        <p className="text-sm text-gray-500">Você recebe o benefício mensalmente até se aposentar.</p>
+                    </div>
+                    <div className="bg-brand-charcoal text-white p-6 col-span-1 sm:col-span-2 rounded-sm relative overflow-hidden">
+                        <div className="absolute top-0 right-0 p-4 opacity-10">
+                            <Scale size={64} />
+                        </div>
+                        <h3 className="font-serif text-xl mb-2 text-brand-gold">Lei 8.213/91</h3>
+                        <p className="text-sm text-gray-300">
+                            "O auxílio-acidente será concedido, como indenização, ao segurado quando, após consolidação das lesões decorrentes de acidente de qualquer natureza, resultarem sequelas que impliquem redução da capacidade."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </section>
+
+      {/* =========================================
+          AUTHORITY (DR. PLACIDO)
+      ========================================= */}
+      <section className="py-20 bg-gray-100 border-t border-gray-200">
+          <div className="container mx-auto px-4">
+              <div className="flex flex-col md:flex-row items-center gap-12 md:gap-20">
+                  {/* Image for Mobile (Visible only on small screens) */}
+                  <div className="md:hidden w-48 h-48 rounded-full overflow-hidden border-4 border-brand-gold mx-auto shadow-xl">
+                      <img 
+                          src="/placido.jpg" 
+                          alt="Dr. Plácido Cintra" 
+                          className="object-cover w-full h-full"
+                          onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=800'; }}
+                      />
+                  </div>
+
+                  <div className="flex-1 text-center md:text-left">
+                      <h4 className="text-brand-steel font-bold tracking-widest uppercase text-sm mb-2">O Advogado</h4>
+                      <h2 className="text-3xl md:text-4xl font-serif text-brand-black font-bold mb-6">Dr. André Ricardo Plácido Cintra</h2>
+                      <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                          Advogado inscrito na OAB/MG sob o nº 161.704, fundador do escritório Plácido Cintra Advocacia. 
+                          Especialista em Direito Previdenciário com foco na defesa dos direitos dos trabalhadores acidentados.
+                      </p>
+                      <p className="text-gray-600 text-lg leading-relaxed mb-8">
+                          Nossa missão é combater a injustiça do INSS através de processos administrativos e judiciais técnicos, 
+                          garantindo que quem contribuiu a vida toda não fique desamparado no momento de maior necessidade.
+                      </p>
+                      
+                      <div className="flex flex-wrap gap-4 justify-center md:justify-start">
+                          <div className="bg-white px-6 py-3 rounded-full shadow-sm border border-gray-200 text-sm font-bold text-brand-charcoal flex items-center gap-2">
+                              <Building2 size={16} className="text-brand-gold" />
+                              Escritório Digital Nacional
+                          </div>
+                          <div className="bg-white px-6 py-3 rounded-full shadow-sm border border-gray-200 text-sm font-bold text-brand-charcoal flex items-center gap-2">
+                              <Scale size={16} className="text-brand-gold" />
+                              +8 Anos de Experiência
+                          </div>
+                      </div>
+
+                       {/* CV Link */}
+                       <div className="mt-8">
+                            <a 
+                                href={LINKS.cv} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 text-brand-steel text-sm font-bold uppercase tracking-wider hover:text-brand-gold transition-colors border-b border-transparent hover:border-brand-gold pb-1"
+                            >
+                                <FileText size={16} />
+                                Visualizar Currículo Oficial (CNA)
+                            </a>
+                       </div>
+                  </div>
+
+                  {/* Desktop Image */}
+                  <div className="hidden md:block w-1/3 relative">
+                      <div className="w-full aspect-[3/4] bg-brand-charcoal rounded-sm overflow-hidden shadow-2xl relative z-10">
+                          <img 
+                              src="/placido.jpg" 
+                              alt="Dr. Plácido Cintra" 
+                              className="object-cover w-full h-full opacity-90"
+                              onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&q=80&w=800'; }}
+                          />
+                          <div className="absolute bottom-0 w-full bg-gradient-to-t from-black to-transparent p-6">
+                              <p className="text-white font-serif text-xl">{COMPANY.attorney}</p>
+                              <p className="text-brand-gold text-xs uppercase">{COMPANY.oab_mg}</p>
+                          </div>
+                      </div>
+                      <div className="absolute -bottom-6 -right-6 w-full h-full border-2 border-brand-gold z-0 rounded-sm"></div>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      {/* =========================================
+          TRANSPARENCY & METHOD (DARK)
+      ========================================= */}
+      <section className="py-20 bg-brand-charcoal text-white relative border-t border-brand-gold">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto mb-16">
-             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-brand-black">Transparência Radical</h2>
-             <div className="w-24 h-1 bg-brand-gold mx-auto mb-6"></div>
-             <p className="text-gray-600 text-lg leading-relaxed">
-               Acreditamos que a confiança se constrói com clareza absoluta. 
-               Você saberá exatamente como trabalhamos antes de assinar qualquer documento.
+             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-brand-white">Como trabalhamos</h2>
+             <p className="text-gray-400 text-lg">
+               Tecnologia e humanização para acelerar o seu direito.
              </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-             {/* Card 1: Honorários */}
-             <div className="bg-gray-50 p-8 border-l-4 border-brand-gold hover:shadow-lg transition-all duration-300 rounded-r-sm group">
-                <div className="mb-6 bg-brand-white w-14 h-14 rounded-full flex items-center justify-center shadow-sm text-brand-gold group-hover:bg-brand-gold group-hover:text-brand-black transition-colors">
-                  <Percent size={24} />
+             {/* Card 1 */}
+             <div className="bg-white/5 p-8 border border-white/10 hover:border-brand-gold transition-all duration-300 rounded-sm">
+                <div className="mb-6 text-brand-gold">
+                  <Percent size={32} />
                 </div>
-                <h3 className="font-serif text-xl font-bold mb-3 text-brand-black">Honorários de Êxito</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">
-                  Trabalhamos no modelo <em>"Ad Exitum"</em>. Isso significa que você não paga nada para iniciar. Nossos honorários são cobrados apenas no final, como uma porcentagem do valor que você receber, <strong>se e quando</strong> ganharmos o processo.
+                <h3 className="font-serif text-xl font-bold mb-3 text-white">Risco Zero</h3>
+                <p className="text-sm text-gray-400 leading-relaxed">
+                  Trabalhamos no êxito (Ad Exitum). Você não paga honorários iniciais. Só recebemos se você ganhar o processo.
                 </p>
              </div>
 
-             {/* Card 2: Contrato Digital */}
-             <div className="bg-gray-50 p-8 border-l-4 border-brand-charcoal hover:shadow-lg transition-all duration-300 rounded-r-sm group">
-                <div className="mb-6 bg-brand-white w-14 h-14 rounded-full flex items-center justify-center shadow-sm text-brand-charcoal group-hover:bg-brand-charcoal group-hover:text-white transition-colors">
-                  <FileSignature size={24} />
+             {/* Card 2 */}
+             <div className="bg-white/5 p-8 border border-white/10 hover:border-brand-gold transition-all duration-300 rounded-sm">
+                <div className="mb-6 text-brand-steel">
+                  <FileSignature size={32} />
                 </div>
-                <h3 className="font-serif text-xl font-bold mb-3 text-brand-black">Tudo no Papel</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">
-                  Sem acordos de boca. Você receberá um contrato de prestação de serviços formal, assinado digitalmente com validade jurídica, detalhando todas as obrigações do escritório e as taxas combinadas.
+                <h3 className="font-serif text-xl font-bold mb-3 text-white">Contrato Digital</h3>
+                <p className="text-sm text-gray-400 leading-relaxed">
+                  Formalização via WhatsApp e assinatura eletrônica com validade jurídica. Tudo transparente e documentado.
                 </p>
              </div>
 
-             {/* Card 3: Acompanhamento */}
-             <div className="bg-gray-50 p-8 border-l-4 border-brand-steel hover:shadow-lg transition-all duration-300 rounded-r-sm group">
-                <div className="mb-6 bg-brand-white w-14 h-14 rounded-full flex items-center justify-center shadow-sm text-brand-steel group-hover:bg-brand-steel group-hover:text-white transition-colors">
-                  <Eye size={24} />
+             {/* Card 3 */}
+             <div className="bg-white/5 p-8 border border-white/10 hover:border-brand-gold transition-all duration-300 rounded-sm">
+                <div className="mb-6 text-brand-gold">
+                  <Eye size={32} />
                 </div>
-                <h3 className="font-serif text-xl font-bold mb-3 text-brand-black">Monitoramento Ativo</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">
-                  Você não ficará no escuro. Diferente de escritórios tradicionais que somem, nós enviamos atualizações proativas sobre o andamento do seu pedido diretamente no seu WhatsApp.
+                <h3 className="font-serif text-xl font-bold mb-3 text-white">Monitoramento</h3>
+                <p className="text-sm text-gray-400 leading-relaxed">
+                  Acompanhamento processual ativo. Nós avisamos você sobre cada movimentação importante.
                 </p>
              </div>
           </div>
         </div>
       </section>
 
-      {/* SEGURANÇA / ANTI-GOLPE SECTION (DARK) */}
-      <section className="py-20 bg-brand-charcoal text-white relative border-b border-gray-800">
+      {/* =========================================
+          SECURITY TIPS
+      ========================================= */}
+      <section className="py-16 bg-brand-black border-t border-gray-800">
         <div className="container mx-auto px-4">
-           <div className="flex flex-col md:flex-row gap-12 items-center">
-              <div className="md:w-1/3">
-                  <div className="text-brand-gold mb-2">
-                    <ShieldAlert size={40} />
-                  </div>
-                  <h2 className="text-3xl font-serif text-brand-white mb-4">Proteja-se de Golpes</h2>
-                  <p className="text-gray-400">
-                    O mercado jurídico infelizmente atrai fraudadores. Saiba diferenciar um escritório sério de golpistas digitais.
-                  </p>
-              </div>
-              
-              <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                 {SECURITY_TIPS.map((tip, idx) => (
-                    <div key={idx} className="bg-white/5 p-6 border border-white/10 hover:border-brand-gold/50 transition-colors rounded-sm">
-                       <div className="text-brand-steel mb-3">
-                         {getIcon(tip.icon)}
-                       </div>
-                       <h3 className="font-bold text-lg mb-2 text-brand-white">{tip.title}</h3>
-                       <p className="text-xs text-gray-400 leading-relaxed">{tip.text}</p>
+            <div className="flex flex-col md:flex-row gap-8 md:gap-12 items-start md:items-center">
+                <div className="md:w-1/3">
+                    <div className="flex items-center gap-3 mb-4">
+                        <ShieldAlert className="text-brand-gold animate-pulse" size={32} />
+                        <h3 className="text-xl font-bold text-white uppercase tracking-wider">Anti-Golpe</h3>
                     </div>
-                 ))}
-              </div>
-           </div>
-        </div>
-      </section>
-
-      {/* AUTHORITY SECTION - ALTERED TO LIGHT TO CREATE CONTRAST */}
-      <section className="py-20 bg-gray-50 text-brand-black relative">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-16">
-            <div className="md:w-1/2">
-                <h2 className="text-3xl md:text-4xl font-serif text-brand-black mb-6">Não é sorte. É técnica.</h2>
-                <p className="text-gray-600 text-lg leading-relaxed mb-6">
-                    O INSS indefere milhares de pedidos todos os dias por falta de prova técnica. 
-                    O Auxílio-Acidente não depende apenas de ter sofrido um acidente, mas de comprovar o 
-                    <strong className="text-brand-goldDark"> Nexo Causal</strong> e a <strong className="text-brand-goldDark">Redução da Capacidade</strong>.
-                </p>
-                <p className="text-gray-600 text-lg leading-relaxed mb-8">
-                    Nossa triagem utiliza os mesmos critérios das perícias judiciais para filtrar casos viáveis. 
-                    Se você teve fratura exposta, colocou pino, placa ou tem limitação de movimento, seu caso merece análise.
-                </p>
-            </div>
-            <div className="md:w-1/2 relative">
-                {/* Decorative Elements */}
-                <div className="absolute -top-10 -right-10 w-32 h-32 bg-brand-gold/20 rounded-full blur-2xl"></div>
-                {/* Dark Card for contrast within Light Section */}
-                <div className="border border-brand-charcoal/10 p-8 bg-brand-charcoal text-white shadow-2xl relative z-10 rounded-sm">
-                    <h4 className="font-serif text-xl text-brand-gold mb-4">O que analisamos:</h4>
-                    <ul className="space-y-4">
-                        <li className="flex items-start gap-3">
-                            <CheckCircle className="text-brand-steel mt-1 shrink-0" size={18} />
-                            <span className="text-gray-300 text-sm">Sequelas definitivas (Pinos, Placas, Limitações).</span>
-                        </li>
-                        <li className="flex items-start gap-3">
-                            <CheckCircle className="text-brand-steel mt-1 shrink-0" size={18} />
-                            <span className="text-gray-300 text-sm">Vínculo com o INSS na época do acidente.</span>
-                        </li>
-                        <li className="flex items-start gap-3">
-                            <CheckCircle className="text-brand-steel mt-1 shrink-0" size={18} />
-                            <span className="text-gray-300 text-sm">Documentação médica (CAT, Prontuários).</span>
-                        </li>
-                        <li className="flex items-start gap-3">
-                            <CheckCircle className="text-brand-steel mt-1 shrink-0" size={18} />
-                            <span className="text-gray-300 text-sm">Impacto na profissão habitual exercida.</span>
-                        </li>
-                    </ul>
+                    <p className="text-gray-400 text-sm">
+                        O mercado jurídico digital exige cautela. Veja como identificamos nossa autenticidade e proteja seus dados.
+                    </p>
+                </div>
+                <div className="md:w-2/3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 w-full">
+                    {SECURITY_TIPS.map((tip, idx) => (
+                        <div key={idx} className="bg-brand-charcoal p-4 rounded-sm border border-gray-700 flex flex-col gap-2">
+                            <div className="text-brand-steel">{getIcon(tip.icon)}</div>
+                            <h4 className="text-white font-bold text-sm">{tip.title}</h4>
+                            <p className="text-xs text-gray-500">{tip.text}</p>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
       </section>
 
-      {/* CTA SECTION (LIGHT) */}
-      <section className="py-24 bg-brand-white text-center">
-        <div className="container mx-auto px-4 max-w-2xl">
-          <h2 className="text-3xl md:text-5xl font-serif text-brand-black mb-8">Descubra sua chance real</h2>
-          <p className="text-gray-600 mb-10 text-lg">
-            Sem promessas vazias. Apenas análise jurídica séria baseada em fatos.
+      {/* =========================================
+          FINAL CTA
+      ========================================= */}
+      <section className="py-20 md:py-24 bg-brand-white text-center">
+        <div className="container mx-auto px-4 max-w-3xl">
+          <h2 className="text-3xl md:text-5xl font-serif text-brand-black mb-6">Não deixe seu direito prescrever</h2>
+          <p className="text-gray-600 mb-10 text-lg md:text-xl">
+            A análise inicial é totalmente gratuita e confidencial. Descubra agora se seu caso é viável.
           </p>
-          <Button onClick={onStartQuiz} className="w-full md:w-auto text-lg px-12 py-5 shadow-2xl mx-auto">
-            INICIAR TRIAGEM TÉCNICA
-          </Button>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <Button onClick={onStartQuiz} className="text-lg px-12 py-5 shadow-2xl w-full sm:w-auto">
+                INICIAR TRIAGEM
+            </Button>
+          </div>
           <p className="mt-6 text-xs text-gray-400 uppercase tracking-widest">
              Tempo estimado: 2 minutos • 100% Online
           </p>

@@ -8,9 +8,10 @@ export const Footer: React.FC = () => {
     <footer className="bg-brand-black text-gray-400 py-12 md:py-16 mt-auto border-t-4 border-brand-gold">
       <div className="container mx-auto px-4">
         
-        <div className="grid md:grid-cols-3 gap-12 mb-12">
+        {/* Grid ajustado para mobile (1 coluna) e desktop (3 colunas) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
           {/* Brand Column */}
-          <div>
+          <div className="flex flex-col items-start">
             <h3 className="text-brand-gold font-serif text-xl mb-6">{COMPANY.name}</h3>
             <p className="text-sm leading-relaxed mb-6 text-gray-300">
               Escritório de advocacia registrado com sólida atuação em Direito Previdenciário. 
@@ -22,7 +23,7 @@ export const Footer: React.FC = () => {
             </div>
 
             {/* ATENDIMENTO ONLINE SECTION */}
-            <div className="mt-8 p-4 bg-brand-charcoal border border-gray-700 rounded-sm">
+            <div className="mt-8 p-4 bg-brand-charcoal border border-gray-700 rounded-sm w-full md:w-auto">
                 <p className="text-xs text-brand-white uppercase tracking-widest mb-3 font-bold flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                     Atendimento Online
@@ -76,13 +77,7 @@ export const Footer: React.FC = () => {
                    <span className="text-xs">{COMPANY.location_branch}</span>
                  </div>
                </li>
-               <li className="flex gap-3">
-                 <MapPin size={16} className="text-brand-gold shrink-0 mt-0.5" />
-                 <div>
-                    <strong className="block text-brand-white">Endereço Fiscal</strong>
-                    <span className="text-xs">{COMPANY.location_fiscal}</span>
-                  </div>
-               </li>
+               {/* Endereço Fiscal removido conforme solicitado */}
              </ul>
           </div>
         </div>
@@ -93,9 +88,9 @@ export const Footer: React.FC = () => {
           <p>Não solicitamos pagamentos antecipados via WhatsApp para liberação de benefícios.</p>
         </div>
 
-        <div className="border-t border-gray-800 pt-8 text-xs text-center flex flex-col md:flex-row justify-between items-center text-gray-500">
+        <div className="border-t border-gray-800 pt-8 text-xs text-center flex flex-col md:flex-row justify-between items-center text-gray-500 gap-4">
           <p>&copy; {new Date().getFullYear()} {COMPANY.name}. Todos os direitos reservados.</p>
-          <p className="mt-2 md:mt-0 font-serif italic text-brand-steel">"A justiça é a constância e perpétua vontade de dar a cada um o que é seu."</p>
+          <p className="font-serif italic text-brand-steel">"A justiça é a constância e perpétua vontade de dar a cada um o que é seu."</p>
         </div>
       </div>
     </footer>
