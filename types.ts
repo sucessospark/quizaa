@@ -1,7 +1,8 @@
+
 export enum ViewState {
   LANDING = 'LANDING',
   QUIZ = 'QUIZ',
-  LEAD_FORM = 'LEAD_FORM', // Novo estado
+  LEAD_FORM = 'LEAD_FORM',
   RESULT = 'RESULT'
 }
 
@@ -38,7 +39,7 @@ export interface CrmPayload {
   lead_source: string; 
   lead_score: number;
   classification: ResultType; 
-  answers_json: string; 
+  answers_json: any; // Alterado para any para flexibilidade do JSON textual
   timestamp: string;
   device_info: {
     userAgent: string;

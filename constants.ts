@@ -4,11 +4,14 @@ import { QuizQuestion } from './types';
 // 1. LINKS E VARIÁVEIS GERAIS (Centralizado)
 // ==========================================
 export const LINKS = {
+  // WhatsApp Dr. Cintra (Alta Prioridade)
   whatsapp: "https://wa.me/5516991579493",
+  // WhatsApp Equipe/Amanda (Média/Baixa Prioridade)
+  whatsapp_team: "https://wa.me/5518981925450", 
+  
   phone_raw: "5516991579493",
   instagram: "https://instagram.com/placidocintra.adv",
   linkedin: "https://linkedin.com/in/placidocintra",
-  // Link para o Curriculo (Pode ser Lattes, LinkedIn ou PDF no Google Drive)
   cv: "https://cnsq.org.br/escritorios/andre-ricardo-placido-cintra/", 
   site_url: "https://www.placidocintra.com",
   webhook_n8n: "https://SEU-N8N-URL-AQUI.com/webhook/quiz-entry"
@@ -107,21 +110,27 @@ export const QUIZ_QUESTIONS: QuizQuestion[] = [
 
 export const RESULT_CONTENT = {
   low: {
-    title: "Triagem: Cenário Desafiador",
-    description: "Pela análise preliminar, seu caso enfrenta barreiras técnicas (como ausência de sequela cirúrgica/funcional ou inacumulabilidade com aposentadoria).",
-    action: "Baixar Manual de Direitos",
-    subtext: "Entenda os critérios do INSS para Auxílio-Acidente."
+    title: "Chance Baixa / Incompatível",
+    description: "Pela análise preliminar, seu caso enfrenta barreiras técnicas (como ausência de sequela cirúrgica/funcional ou inacumulabilidade).",
+    action: "Falar com Equipe de Triagem",
+    subtext: "Converse com nossa equipe para entender os motivos.",
+    priority_label: "PRIORIDADE BAIXA",
+    color_class: "text-red-600 bg-red-50 border-red-200"
   },
   medium: {
-    title: "Triagem: Potencial Identificado",
-    description: "Identificamos indícios de direito (acidente/doença ocupacional), mas é necessário confirmar a documentação médica (Laudos, CAT, Prontuários).",
-    action: "Falar com o Dr. Cintra",
-    subtext: "Análise de viabilidade necessária."
+    title: "Chance Média / Em Análise",
+    description: "Identificamos indícios de direito, mas é necessário confirmar a documentação médica (Laudos, CAT, Prontuários).",
+    action: "Falar com Assistente Amanda",
+    subtext: "Análise de viabilidade necessária.",
+    priority_label: "PRIORIDADE MÉDIA",
+    color_class: "text-amber-600 bg-amber-50 border-amber-200"
   },
   high: {
-    title: "Triagem: Alta Compatibilidade",
-    description: "Seu relato (Acidente + Afastamento + Sequela/Pinos/Placas) é altamente compatível com a concessão do Auxílio-Acidente. O escritório prioriza este perfil.",
-    action: "Falar com o Dr. Cintra",
-    subtext: "Prioridade: Clique para iniciar o atendimento no WhatsApp."
+    title: "ALTA COMPATIBILIDADE",
+    description: "Seu relato é altamente compatível com a concessão do Auxílio-Acidente (Sequela + Afastamento).",
+    action: "Falar com Dr. Plácido Cintra",
+    subtext: "Prioridade Máxima: Seu caso será encaminhado diretamente ao advogado.",
+    priority_label: "URGENTE: PRIORIDADE ALTA",
+    color_class: "text-emerald-700 bg-emerald-50 border-emerald-200"
   }
 };

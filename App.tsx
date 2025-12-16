@@ -4,13 +4,17 @@ import { Footer } from './components/Footer';
 import { LandingPage } from './pages/LandingPage';
 import { Quiz } from './pages/Quiz';
 import { Result } from './pages/Result';
-import { ViewState, ResultType, UserResponses, CrmPayload } from './types';
+import { LeadForm } from './pages/LeadForm';
+import { ViewState, ResultType, UserResponses, CrmPayload, LeadData } from './types';
 import { saveResultToSupabase } from './services/supabase';
 import { sendToWebhook } from './services/webhook';
+import { QUIZ_QUESTIONS } from './constants';
 
 function App() {
   const [view, setView] = useState<ViewState>(ViewState.LANDING);
   const [finalResult, setFinalResult] = useState<ResultType>(ResultType.LOW);
+  const [responses, setResponses] = useState<UserResponses>({});
+  const [leadData, setLeadData] = useState<LeadData | null>(null);
 
   const calculateResult = (currentResponses: UserResponses) => {
     let totalScore = 0;
@@ -23,48 +27,90 @@ function App() {
     return ResultType.LOW;
   };
 
-  // Função centralizada para salvar em todos os lugares (Supabase + N8N)
-  const processAndSaveData = async (resType: ResultType, userResp: UserResponses) => {
+  // Converte IDs em Texto (Usado tanto para WhatsApp quanto para Supabase)
+  const getReadableAnswers = (userResp: UserResponses) => {
+    const readable: Record<string, string> = {};
     
-    // Monta o payload único
+    QUIZ_QUESTIONS.forEach(q => {
+        const selectedOption = q.options.find(opt => opt.score === userResp[q.id]);
+        if (selectedOption) {
+            // Chave simples para facilitar leitura no JSON do banco
+            readable[q.question] = selectedOption.label;
+        }
+    });
+    return readable;
+  };
+
+  const generateTelegramAlert = (data: LeadData, resType: ResultType, score: number) => {
+    let emoji = "⚪";
+    let priorityText = "Baixa";
+    
+    if (resType === ResultType.HIGH) {
+        emoji = "🚨🔴";
+        priorityText = "ALTA / URGENTE";
+    } else if (resType === ResultType.MEDIUM) {
+        emoji = "🟡";
+        priorityText = "Média";
+    }
+
+    return `${emoji} *NOVO LEAD - ${priorityText}*\n\n` +
+           `👤 *Nome:* ${data.name}\n` +
+           `📱 *WhatsApp:* ${data.phone}\n` +
+           `🎯 *Score:* ${score}\n` +
+           `📊 *Classificação:* ${resType}`;
+  };
+
+  const processAndSaveData = async (resType: ResultType, userResp: UserResponses, contactData: LeadData) => {
+    
+    const leadScore = Object.values(userResp).reduce((a, b) => a + b, 0);
+    const readableAnswers = getReadableAnswers(userResp);
+    const telegramMsg = generateTelegramAlert(contactData, resType, leadScore);
+
+    // ESTRUTURA OTIMIZADA PARA O SUPABASE
+    // Colocamos as perguntas como chaves diretas do JSON para leitura fácil na tabela
+    const answersForDb = {
+        ...readableAnswers, // Espalha as perguntas:respostas como campos principais
+        _metadata: {
+            raw_scores: userResp,
+            telegram_alert: telegramMsg,
+            prioridade: resType === ResultType.HIGH ? 'ALTA' : (resType === ResultType.MEDIUM ? 'MEDIA' : 'BAIXA')
+        }
+    };
+
     const payload: CrmPayload = {
       lead_source: 'site_auxilio_acidente',
-      lead_score: Object.values(userResp).reduce((a, b) => a + b, 0),
+      lead_score: leadScore,
       classification: resType,
-      answers_json: JSON.stringify(userResp),
+      answers_json: answersForDb, // Envia objeto direto, o service trata o stringify se precisar
       timestamp: new Date().toISOString(),
       device_info: {
         userAgent: navigator.userAgent,
         screen: `${window.screen.width}x${window.screen.height}`
       },
-      // Como removemos o formulário, enviamos como Anônimo
-      contact: {
-        name: 'Anônimo (Quiz Completo)',
-        phone: ''
-      }
+      contact: contactData
     };
 
-    console.log("Processando salvamento...", payload);
+    console.log("Enviando dados estruturados...", payload);
 
-    // Executa Supabase e Webhook (N8N) em paralelo para não travar a UI
-    // Não usamos 'await' aqui para a transição de tela ser instantânea, 
-    // mas logamos o resultado no console.
     Promise.allSettled([
       saveResultToSupabase(payload),
       sendToWebhook(payload)
     ]).then((results) => {
-      console.log("Sincronização concluída:", results);
+      console.log("Dados sincronizados.", results);
     });
   };
 
   const handleQuizCompletion = (userResponses: UserResponses) => {
     const result = calculateResult(userResponses);
     setFinalResult(result);
-    
-    // 1. Salva os dados (Supabase + N8N)
-    processAndSaveData(result, userResponses);
+    setResponses(userResponses);
+    setView(ViewState.LEAD_FORM);
+    window.scrollTo(0,0);
+  };
 
-    // 2. Vai direto para o resultado, sem pedir nome/telefone
+  const handleLeadSubmit = (data: LeadData) => {
+    setLeadData(data); // Guarda dados para usar na tela de resultado (WhatsApp)
+    processAndSaveData(finalResult, responses, data);
     setView(ViewState.RESULT);
     window.scrollTo(0,0);
   };
@@ -72,7 +118,6 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen font-sans bg-brand-white text-brand-charcoal">
       <Header />
-      
       <main className="flex-grow">
         {view === ViewState.LANDING && (
           <LandingPage onStartQuiz={() => {
@@ -80,24 +125,24 @@ function App() {
             window.scrollTo(0,0);
           }} />
         )}
-
         {view === ViewState.QUIZ && (
           <Quiz 
             onComplete={handleQuizCompletion} 
             onBack={() => setView(ViewState.LANDING)}
           />
         )}
-
-        {/* LeadForm foi removido conforme solicitado */}
-
+        {view === ViewState.LEAD_FORM && (
+          <LeadForm onSubmit={handleLeadSubmit} />
+        )}
         {view === ViewState.RESULT && (
           <Result 
             resultType={finalResult} 
             onReset={() => setView(ViewState.LANDING)}
+            userResponses={responses}
+            leadData={leadData}
           />
         )}
       </main>
-
       <Footer />
     </div>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
-import { COMPANY } from '../constants';
-import { ShieldCheck, MapPin, Mail, Phone } from 'lucide-react';
+import { COMPANY, LINKS } from '../constants';
+import { ShieldCheck, MapPin, Mail, Phone, MessageCircle } from 'lucide-react';
+import { Button } from './Button';
 
 export const Footer: React.FC = () => {
   return (
@@ -18,6 +19,23 @@ export const Footer: React.FC = () => {
             <div className="flex items-center gap-2 text-brand-gold text-sm font-bold border border-brand-gold/30 p-2 inline-block rounded-sm">
               <ShieldCheck size={16} />
               <span>{COMPANY.google_reviews}</span>
+            </div>
+
+            {/* ATENDIMENTO ONLINE SECTION */}
+            <div className="mt-8 p-4 bg-brand-charcoal border border-gray-700 rounded-sm">
+                <p className="text-xs text-brand-white uppercase tracking-widest mb-3 font-bold flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    Atendimento Online
+                </p>
+                <Button 
+                    variant="secondary" 
+                    fullWidth 
+                    className="text-xs py-3 border-brand-gold/50 text-brand-gold hover:text-brand-black hover:bg-brand-gold"
+                    onClick={() => window.open(LINKS.whatsapp_team, '_blank')}
+                >
+                    <MessageCircle size={16} />
+                    Falar com a Equipe Agora
+                </Button>
             </div>
           </div>
 
@@ -59,8 +77,9 @@ export const Footer: React.FC = () => {
                  </div>
                </li>
                <li className="flex gap-3">
-                  <div className="ml-7">
-                    <strong className="block text-brand-white">Fiscal</strong>
+                 <MapPin size={16} className="text-brand-gold shrink-0 mt-0.5" />
+                 <div>
+                    <strong className="block text-brand-white">Endereço Fiscal</strong>
                     <span className="text-xs">{COMPANY.location_fiscal}</span>
                   </div>
                </li>
